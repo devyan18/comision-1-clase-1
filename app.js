@@ -1,12 +1,7 @@
-const fs = require("node:fs/promises")
+const http = require("node:http")
 
-async function leerArchivo () {
-  try {
-    const data = await fs.readFile("./archivo.txt", "utf-8")
-    console.log(data)
-  } catch (error) {
-    console.log(error)
-  }
-} 
+const server = http.createServer((req, res) => {
+  res.end("Hello World")
+})
 
-leerArchivo()
+server.listen(3000)
