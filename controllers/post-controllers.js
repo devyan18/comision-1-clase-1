@@ -1,9 +1,9 @@
 import { listOfPosts } from "../models/post-model.js";
 
 export function ctrlCreatePost(req, res) {
-  const { title, desc } = req.body;
+  const { title, desc, image } = req.body;
 
-  listOfPosts.push({ title, desc });
+  listOfPosts.push({ title, desc, image });
 
   res.sendStatus(201);
 }

@@ -8,7 +8,5 @@ const postsRouter = Router();
 
 postsRouter.get("/", ctrlGetAllPosts);
 postsRouter.post("/", ctrlCreatePost);
-postsRouter.patch("/", ctrlCreatePost);
-postsRouter.delete("/", ctrlCreatePost);
 
 export { postsRouter };
