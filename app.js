@@ -5,6 +5,8 @@ import morgan from "morgan";
 
 import { postsRouter } from "./routes/post-routes.js";
 
+import { env } from "./settings/envs.js";
+
 const app = express();
 
 // middlewares
@@ -17,6 +19,6 @@ app.use(helmet());
 
 app.use("/posts", postsRouter);
 
-app.listen(4000, () => {
-  console.log("server on port 4000");
+app.listen(env.PORT, () => {
+  console.log(`server on port ${env.PORT}`);
 });
