@@ -1,7 +1,24 @@
-const http = require("node:http")
+import express from "express";
+import cors from "cors";
+import helmet from "helmet";
+import morgan from "morgan";
 
-const server = http.createServer((req, res) => {
-  res.end("Hello World")
-})
+import { validatePost } from "./middlewares/validations.js";
 
-server.listen(3000)
+import { postsRouter } from "./routes/post-routes.js";
+
+const app = express();
+
+// middlewares
+app.use(express.json());
+app.use(morgan("dev"));
+app.use(cors());
+app.use(helmet());
+
+app.use(validatePost);
+
+app.use("/posts", postsRouter);
+
+app.listen(4000, () => {
+  console.log("server on port 4000");
+});
