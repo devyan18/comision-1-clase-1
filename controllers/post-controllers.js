@@ -3,15 +3,24 @@ import { postModel } from "../models/post-model.js";
 export function ctrlCreatePost(req, res) {
   const { title, desc, image } = req.body;
 
-  postModel.create({ title, desc, image });
+  const user = req.user;
+  const author = user.name;
+
+  if (!user.isAdmin) return res.sendStatus(401);
+
+  postModel.create({ title, desc, image, author });
 
   res.sendStatus(201);
 }
 
 export const ctrlGetAllPosts = (req, res) => {
+  const user = req.user;
+
   const posts = postModel.findAll();
 
-  res.json(posts);
+  const postsOfUser = posts.filter((post) => post.author === user.name);
+
+  res.json(postsOfUser);
 };
 
 export const ctrlGetPostById = (req, res) => {

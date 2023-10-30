@@ -3,15 +3,16 @@ let listOfPosts = [
     id: Date.now(),
     title: "React",
     desc: "Mi primer app",
+    author: "Jorge",
     image:
       "https://cdn.i-scmp.com/sites/default/files/d8/images/methode/2021/10/28/b99f985c-37b9-11ec-bf9d-b73b258185bb_972x_201134.jpg",
   },
 ];
 
-const createNewPost = ({ title, desc, image }) => {
+const createNewPost = ({ title, desc, image, author }) => {
   if (!title) return null;
 
-  const newPost = { id: Date.now(), title, desc, image };
+  const newPost = { id: Date.now(), title, desc, image, author };
 
   listOfPosts.push(newPost);
 
