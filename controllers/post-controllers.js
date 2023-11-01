@@ -1,60 +1,66 @@
 import { postModel } from "../models/post-model.js";
 
-export function ctrlCreatePost(req, res) {
-  const { title, desc, image } = req.body;
+export async function ctrlCreatePost(req, res) {
+  try {
+    const { title, desc, image } = req.body;
 
-  const user = req.user;
-  const author = user.name;
+    const newPost = await postModel.create({ title, desc, image });
 
-  if (!user.isAdmin) return res.sendStatus(401);
-
-  postModel.create({ title, desc, image, author });
-
-  res.sendStatus(201);
+    res.status(201).json(newPost);
+  } catch (error) {
+    console.log(error);
+    res.sendStatus(500);
+  }
 }
 
-export const ctrlGetAllPosts = (req, res) => {
-  const user = req.user;
-
-  const posts = postModel.findAll();
-
-  const postsOfUser = posts.filter((post) => post.author === user.name);
-
-  res.json(postsOfUser);
-};
-
-export const ctrlGetPostById = (req, res) => {
-  const { postId } = req.params;
-
-  console.log(req.params);
-
-  const post = postModel.findOne({ id: postId });
-
-  if (!post) {
-    return res.sendStatus(404);
+export async function ctrlGetAllPosts(req, res) {
+  try {
+    const posts = await postModel.findAll();
+    res.status(200).json(posts);
+  } catch (error) {
+    console.log(error);
+    res.sendStatus(500);
   }
+}
 
-  res.status(200).json(post);
-};
+export async function ctrlGetPostById(req, res) {
+  try {
+    const { postId } = req.params;
+    const post = await postModel.findByPk(postId);
+    res.status(200).json(post);
+  } catch (error) {
+    console.log(error);
+    res.sendStatus(500);
+  }
+}
 
-export const ctrlUpdatePost = (req, res) => {
-  console.log(req.params);
+export async function ctrlUpdatePost(req, res) {
+  try {
+    const { postId } = req.params;
+    const { title, desc, image } = req.body;
 
-  const { postId } = req.params;
+    const post = await postModel.findByPk(postId);
 
-  const { title, desc, image } = req.body;
+    await post.update({ title, desc, image });
 
-  const updatedPost = postModel.update(postId, { title, desc, image });
+    res.status(200).json(post);
+  } catch (error) {
+    console.log(error);
+    res.sendStatus(500);
+  }
+}
 
-  if (!updatedPost) return res.sendStatus(404);
+export async function ctrlDeletePost(req, res) {
+  try {
+    const { postId } = req.params;
 
-  res.sendStatus(200);
-};
+    const post = await postModel.findByPk(postId);
 
-export const ctrlDeletePost = (req, res) => {
-  const { postId } = req.params;
+    await post.destroy();
 
-  postModel.destroy({ id: postId });
-
-  res.sendStatus(200);
-};
+    res.sendStatus(204);
+  } catch (error) {
+    console.log(error);
+    res.sendStatus(500);
+  }
+}

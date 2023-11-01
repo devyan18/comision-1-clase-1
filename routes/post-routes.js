@@ -6,13 +6,16 @@ import {
   ctrlGetPostById,
   ctrlUpdatePost,
 } from "../controllers/post-controllers.js";
-import { createPostValidation } from "../validations/create-post-validations.js";
 
-import { applyValidations } from "../middlewares/applyValidations.js";
+import { createPostValidation } from "../validations/create-post-validations.js";
 import { findPostValidation } from "../validations/find-post-validations.js";
 import { updatePostValidation } from "../validations/update-post-validations.js";
 
+import { applyValidations } from "../middlewares/applyValidations.js";
+
 const postsRouter = Router();
+
+postsRouter.post("/", createPostValidation, applyValidations, ctrlCreatePost);
 
 postsRouter.get("/", ctrlGetAllPosts);
 
@@ -22,8 +25,6 @@ postsRouter.get(
   applyValidations,
   ctrlGetPostById
 );
-
-postsRouter.post("/", createPostValidation, applyValidations, ctrlCreatePost);
 
 postsRouter.patch(
   "/:postId",

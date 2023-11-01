@@ -5,6 +5,7 @@ import morgan from "morgan";
 
 import { env } from "./settings/envs.js";
 
+import { startConnection } from "./settings/database.js";
 import { postsRouter } from "./routes/post-routes.js";
 import { usersRouter } from "./routes/user-routes.js";
 import { authValidation } from "./middlewares/authValidation.js";
@@ -19,9 +20,11 @@ app.use(helmet());
 
 // app.use(validatePost);
 
-app.use("/posts", authValidation, postsRouter);
+app.use("/posts", postsRouter);
 app.use("/users", usersRouter);
 
-app.listen(env.PORT, () => {
+app.listen(env.PORT, async () => {
+  await startConnection();
+
   console.log(`server on port ${env.PORT}`);
 });
