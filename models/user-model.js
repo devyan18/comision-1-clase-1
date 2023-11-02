@@ -1,38 +1,75 @@
 import bcrypt from "bcrypt";
-import { v4 as uuid } from "uuid";
+import { Schema, model } from "mongoose";
 
-let listOfUsers = [];
+const UserSchema = new Schema(
+  {
+    name: {
+      type: String,
+      require: true,
+      unique: true,
+    },
+    email: {
+      type: String,
+      require: true,
+    },
+    password: {
+      type: String,
+      require: true,
+    },
+    isAdmin: {
+      type: Boolean,
+      default: false,
+    },
+  },
+  {
+    timestamps: true,
+  }
+);
+
+const UserModel = model("User", UserSchema);
 
 const createNewUser = async ({ name, email, password }) => {
   const hashedPassword = await bcrypt.hash(password, 10);
 
-  const newUser = {
-    id: uuid(),
+  const newUserInfo = {
     name,
     email,
     password: hashedPassword,
     isAdmin: name === "seba",
   };
 
-  listOfUsers.push(newUser);
+  const user = await UserModel.create(newUserInfo);
 
-  return newUser;
-};
+  // const user = new UserModel({
+  //   name,
+  //   email,
+  //   password: hashedPassword,
+  //   isAdmin: name === "seba",
+  // });
 
-const getOneUser = ({ id }) => {
-  const user = listOfUsers.find((user) => user.id === id);
+  // await user.save();
+
+  console.log(user.id);
 
   return user;
 };
 
-export const getUserByEmail = ({ email }) => {
-  const user = listOfUsers.find((user) => user.email === email);
+const getOneUser = async ({ id }) => {
+  const user = await UserModel.findById(id);
+
+  // const allUsers = await UserModel.find()
+
+  return user;
+};
+
+export const getUserByEmail = async ({ email }) => {
+  const user = await UserModel.findOne({ email });
 
   return user;
 };
 
 export const loginUser = async ({ email, password }) => {
-  const user = getUserByEmail({ email });
+  const user = await getUserByEmail({ email });
 
   if (!user) {
     return null;
@@ -47,7 +84,18 @@ export const loginUser = async ({ email, password }) => {
   return user;
 };
 
+export const updateUser = async (id, datos) => {
+  const user = await UserModel.findByIdAndUpdate(id, datos, { new: true });
+  return user;
+};
+
+export const deleteUser = async (id) => {
+  await UserModel.findByIdAndDelete(id);
+};
+
 export const userModel = {
   create: createNewUser,
   findOne: getOneUser,
+  update: updateUser,
+  destroy: deleteUser,
 };

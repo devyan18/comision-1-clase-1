@@ -8,6 +8,7 @@ import { env } from "./settings/envs.js";
 import { postsRouter } from "./routes/post-routes.js";
 import { usersRouter } from "./routes/user-routes.js";
 import { authValidation } from "./middlewares/authValidation.js";
+import { startConnection } from "./settings/database.js";
 
 const app = express();
 
@@ -22,6 +23,7 @@ app.use(helmet());
 app.use("/posts", authValidation, postsRouter);
 app.use("/users", usersRouter);
 
-app.listen(env.PORT, () => {
+app.listen(env.PORT, async () => {
+  await startConnection();
   console.log(`server on port ${env.PORT}`);
 });
