@@ -1,5 +1,4 @@
 # Tasks
 
-1. Pasar el secret a una variable de entorno.
-2. Editar y Eliminar posts solo los authores.
-3. Ampliar las funcionalidades de la aplicación.
+1. Hacer el crud de posts con mongoose y practicar hacer más cruds!
+2. Validar los datos de entrada para el register y el login.
